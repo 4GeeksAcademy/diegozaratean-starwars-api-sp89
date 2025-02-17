@@ -80,7 +80,17 @@ def get_director(director_id):
 def top():
     response_body = {
         "msg": "el top 3 de las mejoras pelicul;as de la hisotria ",
-        "top": [
+        "fav_characters": [
+            "la vida es bella",
+            "el pianista",
+            "busqueda implacable"
+        ],
+        "fav_movies": [
+            "la vida es bella",
+            "el pianista",
+            "busqueda implacable"
+        ],
+        "all_fav": [
             "la vida es bella",
             "el pianista",
             "busqueda implacable"
@@ -89,6 +99,32 @@ def top():
 
     return jsonify(response_body), 200
 
+
+@app.route('/director', methods=['POST'])
+def add_director():
+   # PSEUDOCODIGO
+   # DONE: enviar datos de directo dsde postman
+   # DONE: LEER los datos de postman
+   print(request)
+#    print(jsonify(request))
+   print(request.json)
+   print(request.json['nombre'])
+   body = request.json
+
+   if 'nacionalidad' not in body:
+       return "Debes enviarme la nacionalidad", 400
+   if body['nacionalidad'] == '':
+       return "La nacionalidad no puede estar vacia", 400
+
+   # guardar datos en la BDD
+   director = Director(nombre=body['nombre'],nacionalidad=body['nacionalidad'],numero_peliculas=body['numero_peliculas'])
+   db.session.add(director)
+   db.session.commit()
+
+   response_body = {
+        "msg": "debo crear director "
+    }
+   return jsonify(response_body), 200
 
 # FIN CODIGO
 

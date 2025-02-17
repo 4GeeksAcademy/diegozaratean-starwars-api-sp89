@@ -24,9 +24,10 @@ class Director(db.Model):
     nombre = db.Column(db.String(250), nullable=False)
     nacionalidad = db.Column(db.String(250), nullable=False)
     numero_peliculas = db.Column(db.Integer, nullable=False)
+    peliculas = db.relationship('Pelicula', backref='director')
 
     def __repr__(self):
-        return '<Director %r>' % self.nombre
+        return '<Director ' + str(self.id) + self.nombre+ '>'
 
     def serialize(self):
         return {
@@ -34,5 +35,23 @@ class Director(db.Model):
             "nombre": self.nombre,
             "num_peliculas": self.numero_peliculas,
             "rate": 5
+            # do not serialize the password, its a security breach
+        }
+
+class Pelicula(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(250), nullable=False)
+    genero = db.Column(db.String(250), nullable=False)
+    duracion = db.Column(db.Integer, nullable=False)
+    director_id = db.Column(db.Integer, db.ForeignKey('director.id'))
+
+    def __repr__(self):
+        return '<Pelicula %r>' % self.titulo
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "titulo": self.titulo,
+            "genero": self.genero
             # do not serialize the password, its a security breach
         }
